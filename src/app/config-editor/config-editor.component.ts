@@ -45,7 +45,7 @@ export class ConfigEditorComponent implements OnInit {
         noop
       }, 
       (err)=>this.snackBar.open("There was an error saving the new settings, Please try again!", "Ok"),
-      ()=>this.snackBar.open("Player Settings Saved!", "Ok"))
+      ()=>this.snackBar.open("Player Settings Saved!", "Ok").onAction().subscribe(()=> this.onBack()))
   }
 
   onBack() {
