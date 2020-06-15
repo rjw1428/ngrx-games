@@ -1,0 +1,23 @@
+<!-- SETTINGS -->
+<span>
+    <button style="float:right" (click)="onSettings()">Settings</button>
+</span>
+
+<!-- BOARD -->
+<div class="row" *ngFor="let row of (board$ | async) as board; let j=index">
+    <div class="cell" *ngFor="let cell of row; let i=index">
+        <move-location [row]="j" [column]="i"></move-location>
+    </div>
+</div>
+
+<!-- MESSAGES -->
+<h1 *ngIf="isTie && !(hasWon$ | async)">Tie Game</h1>
+<h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
+<h3 *ngIf="!isTie && !(hasWon$ | async)">Turn: <span [ngStyle]="{'color':(turn$ | async).color}">{{(turn$ | async).name}}</span></h3>
+<hr>
+
+<!-- RESET -->
+<button *ngIf="isTie || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
+
+
+

@@ -1,0 +1,18 @@
+:host {
+    --size: 100px;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size);
+    height: var(--size);
+    box-sizing: border-box;
+}
+
+.value {
+    font-family: 'Indie Flower', cursive;
+    font-size: var(--size);
+    font-weight: bold;
+}

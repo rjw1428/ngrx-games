@@ -1,0 +1,9 @@
+<div class="location" 
+    [ngStyle]="{'border': onHover?'2px solid '+(currentTurn$ | async).color:'none'}" 
+    (mouseover)="changeStyle($event)" 
+    (mouseout)="changeStyle($event)" 
+    (click)="onClick()">
+    <div class="value" *ngIf="(player$ | async) as player" [ngStyle]="{'color': player.color}">
+        {{ player.symbol }}
+    </div>
+</div>
