@@ -1,12 +1,12 @@
-import {Request, Response} from 'express';
-import { writeFile } from 'fs';
-import { CONFIG } from './config';
+import { Request, Response } from 'express';
+import { writeFileSync, readFileSync } from 'fs';
+import * as path from 'path';
 
-const fileName = "config.ts"
+const fileName = "config.json"
 
 export function setConfig(req: Request, res: Response) {
     console.log("Setting game config...");
-    console.log(req)
-    writeFile(fileName, req, (err) => console.log(err?err:"config updated"))
-    res.status(200).json({payload:Object.values(CONFIG)});
+    console.log(req.body)
+    writeFileSync(path.join(__dirname, fileName), JSON.stringify(req.body))
+    res.status(200).json({ payload: req.body });
 }

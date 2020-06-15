@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-  // players: Observable<Player[]>
   player1: Player
   player2: Player
   boardWidth = 3
@@ -27,14 +26,12 @@ export class BoardComponent implements OnInit {
   config$: Observable<Player[]>
   hasWon$: Observable<Player>
   isTie: boolean = false
-  players: Player[] = [
-    new Player(1, "Player 1", "X", "#b53737"),
-    new Player(2, "Player 2", "O", "#1167b1")
-  ]
+
   constructor(
     private store: Store<AppState>,
     private winService: WinService,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) {
   }
 
@@ -46,9 +43,13 @@ export class BoardComponent implements OnInit {
     this.winService.checkWinConitions().subscribe(noop)
     this.winService.checkNoMovesCondition().subscribe(freeMoves => this.isTie = !freeMoves)
 
-    this.store.dispatch(Actions.setPlayerConfig({
-      config: this.players
-    }))
+    // Get Player config
+    this.configService.getConfig().subscribe(players => {
+      this.store.dispatch(Actions.setPlayerConfig({
+        config: players
+      }))
+    })
+
 
     this.board$ = this.store.pipe(
       select(boardSelector)

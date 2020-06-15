@@ -19,6 +19,6 @@ export class ConfigService {
   }
 
   setConfig(body) {
-    this.http.post(`/api/config`, body)
+    return this.http.post(`/api/config`, body)
   }
 }

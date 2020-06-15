@@ -27,10 +27,6 @@ export const routes: Routes = [
     StoreModule.forFeature('game', boardReducer),
     EffectsModule.forFeature([BoardEffects])
   ],
-  exports: [
-    BoardComponent,
-    MoveLocationComponent,
-  ],
   providers: [
     WinService
   ]

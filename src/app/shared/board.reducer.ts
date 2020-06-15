@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store'
 import * as Actions from './board.actions'
 import { GameState } from '../models/game-model'
+import { Inject } from '@angular/core'
 
 export const initialGameState: GameState = {
     hasWon: null,
@@ -8,6 +9,7 @@ export const initialGameState: GameState = {
     turnId: 1,
     config: []
 }
+
 
 export const boardReducer = createReducer(
     initialGameState,
