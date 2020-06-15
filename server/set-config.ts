@@ -1,6 +1,6 @@
+import { writeFileSync } from 'fs'
+import * as path from 'path'
 import { Request, Response } from 'express';
-import { writeFileSync, readFileSync } from 'fs';
-import * as path from 'path';
 
 const fileName = "config.json"
 

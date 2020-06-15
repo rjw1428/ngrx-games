@@ -6,9 +6,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SharedModule } from '../models/shared.module';
+
 
 export const routes: Routes = [
   {
@@ -25,12 +25,11 @@ export const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule,
     ColorPickerModule,
-    MatSnackBarModule,
     RouterModule.forChild(routes),
   ],
 

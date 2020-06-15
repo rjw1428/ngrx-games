@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ConfigService } from '../services/config.service';
 import { Observable, noop } from 'rxjs';
 import { Player } from '../models/player-model';;
@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+  styleUrls: ['./board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardComponent implements OnInit {
   player1: Player
