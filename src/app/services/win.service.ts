@@ -45,9 +45,7 @@ export class WinService {
   checkAllRows(board: number[][], chainSize: number) {
     for (let rowIndx in board) {
       const row = board[rowIndx]
-      const player1Streak = this.countOccurancesInArray(row, 1)
-      const player2Streak = this.countOccurancesInArray(row, 2)
-      if (player1Streak == chainSize || player2Streak == chainSize)
+      if (this.determineWinCondition(row, chainSize))
         return true
 
     }
@@ -57,12 +55,16 @@ export class WinService {
   checkAllCols(board: number[][], chainSize: number) {
     for (let colIndx in board[0]) {
       const col = board.map(row => row[colIndx])
-      const player1Streak = this.countOccurancesInArray(col, 1)
-      const player2Streak = this.countOccurancesInArray(col, 2)
-      if (player1Streak == chainSize || player2Streak == chainSize)
+      if (this.determineWinCondition(col, chainSize))
         return true
     }
     return false
+  }
+
+  determineWinCondition(arr, size) {
+    const player1Streak = this.countOccurancesInArray(arr, 1)
+    const player2Streak = this.countOccurancesInArray(arr, 2)
+    return (player1Streak == size || player2Streak == size)
   }
 
   checkDiagnalWin(board: number[][], chainSize: number) {
@@ -91,48 +93,10 @@ export class WinService {
     let count = 0
     let max = 0
     row.forEach(cell => {
-      cell == val ? count++ : count = 0;
-      if (count > max) max = count;
+      count = cell == val ? count+1 : 0;
+      if (count > max) 
+        max = count;
     })
     return max
   }
-
-  flipBoard(board: number[][]) {
-    return board.reverse()
-  }
-
-
-
-
-  // checkAllRows(board: number[][], chainSize) {
-  //   return board
-  //     .map(row => this.checkSingleRowWin(row))
-  //     .reduce((acc, cur) => acc < cur ? cur : acc, 0)
-  // }
-
-  // checkAllCols(board: number[][], chainSize) {
-  //   const TBoard = this.transposeBoard(board)
-  //   return this.checkAllRows(TBoard, chainSize)
-  // }
-
-  // // Returns the player number or 0
-  // checkSingleRowWin(row: number[]) {
-  //   return row.reduce((result, cell) => {
-  //     return result == cell ? cell : 0
-  //   }, row[0])
-  // }
-
-  // // Transpose board
-  // transposeBoard(board: number[][]) {
-  //   return board[0].map((_, colIndex) => board.map(row => row[colIndex]));
-  // }
-
-  // // Checks for diagnal win
-  // checkDiagnalWin(board: number[][]) {
-  //   if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[1][1])
-  //     return 1
-  //   else if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[1][1])
-  //     return 1
-  //   return 0
-  // }
 }

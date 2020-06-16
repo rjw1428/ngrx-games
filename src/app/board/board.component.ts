@@ -20,8 +20,8 @@ import { Router } from '@angular/router';
 export class BoardComponent implements OnInit {
   player1: Player
   player2: Player
-  boardWidth = 6
-  boardHeight = 4
+  boardWidth = 7
+  boardHeight = 6
   winChain = 4
   board$: Observable<any>
   turn$: Observable<Player>
