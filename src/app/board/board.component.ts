@@ -20,8 +20,9 @@ import { Router } from '@angular/router';
 export class BoardComponent implements OnInit {
   player1: Player
   player2: Player
-  boardWidth = 3
-  boardHeight = 3
+  boardWidth = 6
+  boardHeight = 4
+  winChain = 4
   board$: Observable<any>
   turn$: Observable<Player>
   config$: Observable<Player[]>
@@ -41,7 +42,7 @@ export class BoardComponent implements OnInit {
     this.onReset()
 
     // Monitor Game conditions
-    this.winService.checkWinConitions().subscribe(noop)
+    this.winService.checkWinConitions(this.winChain).subscribe(noop)
     this.winService.checkNoMovesCondition().subscribe(freeMoves => this.isTie = !freeMoves)
 
     // Get Player config
@@ -50,7 +51,6 @@ export class BoardComponent implements OnInit {
         config: players
       }))
     })
-
 
     this.board$ = this.store.pipe(
       select(boardSelector)

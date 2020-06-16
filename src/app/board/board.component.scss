@@ -17,53 +17,62 @@
     box-sizing: border-box;
 }
 
-.row:nth-of-type(1) .cell:nth-of-type(1) {
-    border-right: var(--board-boarder);
+//TOP-LEFT CORNER
+.row:first-of-type .cell:first-of-type {
     border-bottom: var(--board-boarder);
+    border-right: var(--board-boarder);
 }
 
-.row:nth-of-type(1) .cell:nth-of-type(2) {
-    border-right: var(--board-boarder);
-    border-bottom: var(--board-boarder);
-    border-left: var(--board-boarder);
-}
-
-.row:nth-of-type(1) .cell:nth-of-type(3) {
-    border-left: var(--board-boarder);
-    border-bottom: var(--board-boarder);
-}
-
-.row:nth-of-type(2) .cell:nth-of-type(1) {
-    border-top: var(--board-boarder);
-    border-right: var(--board-boarder);
-    border-bottom: var(--board-boarder);
-}
-
-.row:nth-of-type(2) .cell:nth-of-type(2) {
-    border-top: var(--board-boarder);
-    border-right: var(--board-boarder);
+//TOP-RIGHT CORNER
+.row:first-of-type .cell:nth-last-of-type(1) {
     border-bottom: var(--board-boarder);
     border-left: var(--board-boarder);
 }
 
-.row:nth-of-type(2) .cell:nth-of-type(3) {
+//BOTTOM-LEFT CORNER
+.row:nth-last-of-type(1) .cell:first-of-type {
+    border-top: var(--board-boarder);
+    border-right: var(--board-boarder);
+}
+
+//BOTTOM-RIGHT CORNER
+.row:nth-last-of-type(1) .cell:nth-last-of-type(1) {
+    border-top: var(--board-boarder);
+    border-left: var(--board-boarder);
+}
+
+//TOP
+.row:first-of-type .cell:not(:nth-last-of-type(1)):not(:first-of-type) {
+    border-bottom: var(--board-boarder);
+    border-left: var(--board-boarder);
+    border-right: var(--board-boarder);
+}
+
+//BOTTOM
+.row:nth-last-of-type(1) .cell:not(:nth-last-of-type(1)):not(:first-of-type) {
+    border-top: var(--board-boarder);
+    border-left: var(--board-boarder);
+    border-right: var(--board-boarder);
+}
+
+//RIGHT
+.row:not(:nth-last-of-type(1)):not(:first-of-type) .cell:nth-last-of-type(1) {
     border-top: var(--board-boarder);
     border-bottom: var(--board-boarder);
     border-left: var(--board-boarder);
 }
 
-.row:nth-of-type(3) .cell:nth-of-type(1) {
-    border-right: var(--board-boarder);
+//LEFT
+.row:not(:nth-last-of-type(1)):not(:first-of-type) .cell:first-of-type {
     border-top: var(--board-boarder);
+    border-bottom: var(--board-boarder);
+    border-right: var(--board-boarder);
 }
 
-.row:nth-of-type(3) .cell:nth-of-type(2) {
+//INSIDE
+.row:not(:nth-last-of-type(1)):not(:first-of-type) .cell:not(:first-of-type):not(:nth-last-of-type(1)) {
     border-top: var(--board-boarder);
+    border-bottom: var(--board-boarder);
     border-right: var(--board-boarder);
-    border-left: var(--board-boarder);
-}
-
-.row:nth-of-type(3) .cell:nth-of-type(3) {
-    border-top: var(--board-boarder);
     border-left: var(--board-boarder);
 }
