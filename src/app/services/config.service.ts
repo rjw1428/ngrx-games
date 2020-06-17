@@ -8,10 +8,11 @@ import { Player } from '../models/player-model';
   providedIn: 'root'
 })
 export class ConfigService {
+  ENDPOINT = "/api/config"
   constructor(private http: HttpClient) { }
 
   getConfig(): Observable<Player[]> {
-    return this.http.get(`/api/config`).pipe(
+    return this.http.get(this.ENDPOINT).pipe(
       map((resp: any)=> resp.payload.map(player => {
         return new Player(player.id, player.name, player.symbol, player.color)
       }))
@@ -19,6 +20,6 @@ export class ConfigService {
   }
 
   setConfig(body) {
-    return this.http.post(`/api/config`, body)
+    return this.http.post(this.ENDPOINT, body)
   }
 }

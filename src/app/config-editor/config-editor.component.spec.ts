@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfigEditorComponent } from './config-editor.component';
+import { ConfigModule } from './config.module';
+import { SharedModule } from '../models/shared.module';
+import { ConfigService } from '../services/config.service';
+import { AppModule } from '../app.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConfigEditorComponent', () => {
   let component: ConfigEditorComponent;
@@ -8,7 +13,13 @@ describe('ConfigEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigEditorComponent ]
+      declarations: [  ],
+      imports: [ 
+        AppModule,
+        SharedModule,
+        ConfigModule,
+        HttpClientTestingModule
+      ]
     })
     .compileComponents();
   }));

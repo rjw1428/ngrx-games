@@ -4,9 +4,7 @@ import { Observable, noop } from 'rxjs';
 import { Player } from '../models/player-model';;
 import { Store, select } from '@ngrx/store';
 import * as Actions from '../shared/board.actions'
-import { map, tap } from 'rxjs/operators';
 import { boardSelector, turnSelector, configSelector, hasWonSelector } from '../shared/board.selectors';
-import { GameState } from '../models/game-model';
 import { AppState } from '../models/app-model';
 import { WinService } from '../services/win.service';
 import { Router } from '@angular/router';
@@ -26,7 +24,7 @@ export class BoardComponent implements OnInit {
   board$: Observable<any>
   turn$: Observable<Player>
   config$: Observable<Player[]>
-  hasWon$: Observable<Player>
+  hasWon$: Observable<Player> | null
   isTie: boolean = false
 
   constructor(

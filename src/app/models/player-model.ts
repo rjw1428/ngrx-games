@@ -5,4 +5,8 @@ export class Player {
         public symbol: string,
         public color: string
     ) {}
+
+    toString() {
+        return `${this.id}: ${this.name} (${this.symbol}) `
+    }
 }

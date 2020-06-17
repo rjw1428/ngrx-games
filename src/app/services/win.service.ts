@@ -47,7 +47,6 @@ export class WinService {
       const row = board[rowIndx]
       if (this.determineWinCondition(row, chainSize))
         return true
-
     }
     return false
   }
@@ -64,7 +63,7 @@ export class WinService {
   determineWinCondition(arr, size) {
     const player1Streak = this.countOccurancesInArray(arr, 1)
     const player2Streak = this.countOccurancesInArray(arr, 2)
-    return (player1Streak == size || player2Streak == size)
+    return (player1Streak >= size || player2Streak >= size)
   }
 
   checkDiagnalWin(board: number[][], chainSize: number) {
@@ -74,7 +73,7 @@ export class WinService {
         if (cell) {
           const downStreak = this.traverseDiagnalForStreak(board, +rowIndx + 1, +colIndx + 1, 1, cell, 1)
           const upStreak = this.traverseDiagnalForStreak(board, +rowIndx - 1, +colIndx + 1, -1, cell, 1)
-          if (upStreak == chainSize || downStreak == chainSize)
+          if (upStreak >= chainSize || downStreak >= chainSize)
             return true
         }
       }
