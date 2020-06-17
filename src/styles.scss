@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
-.test {
-    border: 1px solid red;
-}
-html, body { height: 100%; }
+.test {border: 1px solid red;}
+html, body { height: 100vh; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

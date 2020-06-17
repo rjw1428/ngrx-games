@@ -19,6 +19,7 @@ export class MoveLocationComponent implements OnInit {
   @Input() row: number
   onHover: boolean = false; // Used to highlight cell on mouse over
   currentTurn$: Observable<Player> // Used to determine cell highlight color
+  gameType$: Observable<string> // Used to add shrinkable class on element size if game type == c4
   player: Player // cells value
   gameOver: boolean = false
   constructor(
@@ -28,9 +29,8 @@ export class MoveLocationComponent implements OnInit {
 
   ngOnInit(): void {
     // Subscribe to current turn
-    this.currentTurn$ = this.store.pipe(
-      select(currentTurnSelector)
-    )
+    this.currentTurn$ = this.store.pipe(select(currentTurnSelector))
+    this.gameType$ = this.store.pipe(map(state=>state.game.gameType))
     // Subscribe to which player to display
     this.store.pipe(
       map(state => {

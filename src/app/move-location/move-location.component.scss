@@ -16,3 +16,9 @@
     font-size: var(--size);
     font-weight: bold;
 }
+
+@media all and (max-width: 750px) {
+    .shrinkable {
+        --size: 10vw;
+    }
+}
