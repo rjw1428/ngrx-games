@@ -1,13 +1,16 @@
 <!-- SETTINGS -->
 <span>
-  <button mat-raised-button  color="primary" style="float:right;margin-right:10px" (click)="onSettings()">Settings</button>
+  <button mat-raised-button color="primary" style="float:right;margin-right:10px"
+    (click)="onSettings()">Settings</button>
 </span>
 
 <!-- BOARD -->
-<div class="board">
-  <div class="row" *ngFor="let row of (board$ | async) as board; let j=index">
-    <div class="cell" *ngFor="let cell of row; let i=index">
-      <move-location [row]="j" [column]="i"></move-location>
+<div class="board-wrapper">
+  <div class="board">
+    <div class="row" *ngFor="let row of (board$ | async) as board; let j=index">
+      <div class="cell" *ngFor="let cell of row; let i=index">
+        <move-location [row]="j" [column]="i"></move-location>
+      </div>
     </div>
   </div>
 </div>
