@@ -3,9 +3,10 @@ import { AppState } from '../models/app-model';
 import { Store, select } from '@ngrx/store';
 import * as Actions from '../shared/board.actions'
 import { map, tap, filter, first, take, takeWhile } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, noop } from 'rxjs';
 import { Player } from '../models/player-model';
 import { currentTurnSelector } from '../shared/board.selectors';
+import { GravityService } from '../services/gravity.service';
 
 @Component({
   selector: 'move-location',
@@ -21,7 +22,8 @@ export class MoveLocationComponent implements OnInit {
   player: Player // cells value
   gameOver: boolean = false
   constructor(
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private gravity: GravityService
   ) { }
 
   ngOnInit(): void {
@@ -49,10 +51,19 @@ export class MoveLocationComponent implements OnInit {
   onClick() {
     if (this.gameOver) return console.log("The game has been won, reset the board.")
     if (this.player) return console.log("Position already taken, try again.")
-    this.store.dispatch(Actions.boardUpdated({
-      row: this.row,
-      col: this.column
-    }))
+    this.store.pipe(
+      map(state => {
+        return this.gravity.applyGravity(state.game.board, this.row, this.column)
+      }),
+      first(),
+      map(rowAfterFalling => {
+        if (rowAfterFalling<0) return console.log("This column is full, try another")
+        this.store.dispatch(Actions.boardUpdated({
+          row: rowAfterFalling, //this.row
+          col: this.column
+        }))
+      })
+    ).subscribe(noop)
   }
 
   changeStyle(event) {
