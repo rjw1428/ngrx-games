@@ -53,13 +53,15 @@ export class MoveLocationComponent implements OnInit {
     if (this.player) return console.log("Position already taken, try again.")
     this.store.pipe(
       map(state => {
-        return this.gravity.applyGravity(state.game.board, this.row, this.column)
+        if (state.game.isGravity)
+          return this.gravity.applyGravity(state.game.board, this.row, this.column)
+        else return this.row
       }),
       first(),
-      map(rowAfterFalling => {
-        if (rowAfterFalling<0) return console.log("This column is full, try another")
+      map(row => {
+        if (row<0) return console.log("This column is full, try another")
         this.store.dispatch(Actions.boardUpdated({
-          row: rowAfterFalling, //this.row
+          row: row,
           col: this.column
         }))
       })

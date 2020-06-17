@@ -8,6 +8,7 @@ import { boardSelector, turnSelector, configSelector, hasWonSelector } from '../
 import { AppState } from '../models/app-model';
 import { WinService } from '../services/win.service';
 import { Router } from '@angular/router';
+import { switchMap, map, first, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'board',
@@ -18,9 +19,6 @@ import { Router } from '@angular/router';
 export class BoardComponent implements OnInit {
   player1: Player
   player2: Player
-  boardWidth = 7
-  boardHeight = 6
-  winChain = 4
   board$: Observable<any>
   turn$: Observable<Player>
   config$: Observable<Player[]>
@@ -40,8 +38,14 @@ export class BoardComponent implements OnInit {
     this.onReset()
 
     // Monitor Game conditions
-    this.winService.checkWinConitions(this.winChain).subscribe(noop)
-    this.winService.checkNoMovesCondition().subscribe(freeMoves => this.isTie = !freeMoves)
+    this.store.pipe(
+      switchMap(state => {
+        return this.winService.checkWinConitions(state.game.winChain)
+      }),
+      switchMap(() => {
+        return this.winService.checkNoMovesCondition()
+      }),
+    ).subscribe(freeMoves => this.isTie = !freeMoves)
 
     // Get Player config
     this.configService.getConfig().subscribe(players => {
@@ -50,21 +54,10 @@ export class BoardComponent implements OnInit {
       }))
     })
 
-    this.board$ = this.store.pipe(
-      select(boardSelector)
-    )
-
-    this.turn$ = this.store.pipe(
-      select(turnSelector)
-    )
-
-    this.config$ = this.store.pipe(
-      select(configSelector)
-    )
-
-    this.hasWon$ = this.store.pipe(
-      select(hasWonSelector)
-    )
+    this.board$ = this.store.pipe(select(boardSelector))
+    this.turn$ = this.store.pipe(select(turnSelector))
+    this.config$ = this.store.pipe(select(configSelector))
+    this.hasWon$ = this.store.pipe(select(hasWonSelector))
   }
 
   initializeBoard(width, height): number[][] {
@@ -74,12 +67,25 @@ export class BoardComponent implements OnInit {
   }
 
   onReset() {
-    this.store.dispatch(Actions.initializeBoard({
-      board: this.initializeBoard(this.boardWidth, this.boardHeight)
-    }))
+    this.store.pipe(
+      map(state => {
+        return {
+          width: state.game.boardWidth,
+          height: state.game.boardHeight
+        }
+      }),
+      first()
+    ).subscribe(board => {
+      if (!board.height || !board.width)
+        this.onHome()
+      else
+        this.store.dispatch(Actions.initializeBoard({
+          board: this.initializeBoard(board.width, board.height)
+        }))
+    })
   }
 
-  onSettings() {
-    this.router.navigate(['/config'])
+  onHome() {
+    this.router.navigate(['/'])
   }
 }

@@ -13,13 +13,19 @@ export class ConfigService {
 
   getConfig(): Observable<Player[]> {
     return this.http.get(this.ENDPOINT).pipe(
-      map((resp: any)=> resp.payload.map(player => {
-        return new Player(player.id, player.name, player.symbol, player.color)
-      }))
+      map(resp => this.createPlayers(resp))
     )
   }
 
-  setConfig(body) {
-    return this.http.post(this.ENDPOINT, body)
+  setConfig(body): Observable<Player[]> {
+    return this.http.post(this.ENDPOINT, body).pipe(
+      map(resp => this.createPlayers(resp))
+    )
+  }
+
+  createPlayers(resp: any): Player[] {
+    return resp.payload.map(player => {
+      return new Player(player.id, player.name, player.symbol, player.color)
+    })
   }
 }

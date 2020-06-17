@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <mat-card class="select-game-card mat-elevation-z1">
+    <mat-form-field>
+      <mat-label>Select a game:</mat-label>
+      <mat-select [value]="selectedGameId" (selectionChange)="onGameSelect($event)">
+        <mat-option [value]="game.value" *ngFor="let game of gameList">
+          {{game.label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+
+  <config-editor (start)="onConfigSet()"></config-editor>
+
+</div>

@@ -1,6 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { Player } from '../models/player-model';
+
+const gameSelected = createAction(
+    "[Home Component] Game Type Selected",
+    props<{gameTypeId: string}>()
+)
 
 const boardUpdated = createAction(
     "[Move Component] Move Made",
@@ -31,5 +35,6 @@ export {
     initializeBoard,
     playerWon,
     getPlayerConfig,
-    setPlayerConfig
+    setPlayerConfig,
+    gameSelected
 }

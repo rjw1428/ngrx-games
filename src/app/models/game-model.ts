@@ -4,5 +4,10 @@ export interface GameState {
     turnId: number,
     hasWon: Player,
     board: number[][],
-    config: Player[]
+    config: Player[],
+    gameType: null | "ttt" | "c4"
+    boardWidth: number,
+    boardHeight: number,
+    winChain: number,
+    isGravity: boolean,
 }

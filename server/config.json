@@ -1,1 +1,11 @@
-[{"id":1,"name":"Ryan","symbol":"X","color":"#9e1818"},{"id":2,"name":"Player 2","symbol":"O","color":"#1167b1"}]
+[{
+  "id": 1,
+  "name": "Player 1",
+  "symbol": "X",
+  "color": "#9e1818"
+}, {
+  "id": 2,
+  "name": "Player 2",
+  "symbol": "O",
+  "color": "#1167b1"
+}]
