@@ -1,7 +1,6 @@
 <!-- SETTINGS -->
 <span>
-  <button mat-raised-button color="primary" style="float:right;margin-right:10px"
-    (click)="onHome()">Home</button>
+  <button mat-raised-button color="primary" style="float:right;margin-right:10px" (click)="onHome()">Home</button>
 </span>
 
 <!-- BOARD -->
@@ -13,14 +12,15 @@
       </div>
     </div>
   </div>
+
+  <!-- MESSAGES -->
+  <h1 *ngIf="isTie && !(hasWon$ | async)">Tie Game</h1>
+  <h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
+  <h3 *ngIf="!isTie && !(hasWon$ | async)">Turn: <span
+      [ngStyle]="{'color':(turn$ | async)?.color}">{{(turn$ | async)?.name}}</span></h3>
+  <hr>
+
+  <!-- RESET -->
+  <button mat-raised-button *ngIf="isTie || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
+
 </div>
-
-<!-- MESSAGES -->
-<h1 *ngIf="isTie && !(hasWon$ | async)">Tie Game</h1>
-<h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
-<h3 *ngIf="!isTie && !(hasWon$ | async)">Turn: <span
-    [ngStyle]="{'color':(turn$ | async)?.color}">{{(turn$ | async)?.name}}</span></h3>
-<hr>
-
-<!-- RESET -->
-<button mat-raised-button *ngIf="isTie || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
