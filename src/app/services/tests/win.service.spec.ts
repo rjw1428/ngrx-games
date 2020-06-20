@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { WinService } from './win.service';
+import { WinService } from '../win.service';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { initialGameState } from '../shared/board.reducer';
+import { initialGameState } from '../../shared/board.reducer';
 import { addMatchers, initTestScheduler } from 'jasmine-marbles';
-import { AppModule } from '../app.module';
-import { GameState } from '../models/game-model';
-import * as test from '../test/boards'
+import { AppModule } from '../../app.module';
+import { GameState } from '../../models/game-model';
+import * as test from '../../test/boards'
 
 describe('WinService', () => {
   let service: WinService;
@@ -14,7 +14,7 @@ describe('WinService', () => {
 
   const initialState = {
     ...initialGameState,
-    board: test.board1,
+    board: test.board5,
     hasWon: null
   }
 
@@ -63,4 +63,12 @@ describe('WinService', () => {
     expect(service.checkDiagnalWin(test.board2, 4)).toBeFalsy()
     expect(service.checkDiagnalWin(test.board3, 4)).toBeFalsy()
   })
+
+  // it('should produce a tie', () => {
+  //   expect(service.checkNoMovesCondition(test.board5, false)).toBeFalsy()
+  // })
+
+  // it('should not produce a tie', () => {
+  //   expect(service.checkNoMovesCondition(test.board3, false)).toBeFalsy()
+  // })
 });

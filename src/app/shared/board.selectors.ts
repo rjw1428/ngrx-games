@@ -10,14 +10,9 @@ export const boardSelector = createSelector(
     game => game.board
 )
 
-export const turnSelector = createSelector(
+export const playerSelector = createSelector(
     selectGameState,
-    game => game.config.find(player => player.id == game.turnId)
-)
-
-export const configSelector = createSelector(
-    selectGameState,
-    game => game.config
+    game => game.players
 )
 
 export const hasWonSelector = createSelector(
@@ -25,11 +20,16 @@ export const hasWonSelector = createSelector(
     game => game.hasWon
 )
 
-export const currentTurnSelector = createSelector(
-    selectGameState,
-    game => getPlayerFromId(game, game.turnId)
-)
+// export const currentTurnSelector = createSelector(
+//     selectGameState,
+//     game => getPlayerFromId(game, game.turnId)
+// )
 
-const getPlayerFromId = (state: GameState, id: number) => {
-    return state.config.find(player => player.id === id)
-}
+// export const turnSelector = createSelector(
+//     selectGameState,
+//     game => game.config.find(player => player.value == game.turnId)
+// )
+
+// const getPlayerFromId = (state: GameState, id: number) => {
+//     return state.config.find(player => player.value === id)
+// }

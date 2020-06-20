@@ -8,8 +8,17 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Play Mode:</mat-label>
+        <mat-select [value]="selectedPlayMode" (selectionChange)="onModeSelect($event)">
+          <mat-option [value]="mode.value" *ngFor="let mode of modeList">
+            {{mode.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
   </mat-card>
 
-  <config-editor (start)="onConfigSet()"></config-editor>
+  <config-editor (start)="onConfigSet($event)"></config-editor>
 
 </div>

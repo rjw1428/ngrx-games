@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../models/app-model';
 import { map } from 'rxjs/internal/operators/map';
-import * as Actions from '../shared/board.actions'
+import { playerWon } from '../shared/board.actions';
 
 @Injectable()
 export class WinService {
@@ -18,28 +18,25 @@ export class WinService {
           const hasWinningDiagnal = this.checkDiagnalWin(state.game.board, chainSize)
 
           if (hasWinningCol || hasWinningRow || hasWinningDiagnal) {
-            const oppositeId = state.game.turnId == 1 ? 2 : 1
-            this.store.dispatch(Actions.playerWon({
-              playerId: oppositeId
+            const oppositePlayer = state.game.players.find(player => player.id != state.game.turnId)
+            this.store.dispatch(playerWon({
+              player: oppositePlayer
             }))
           }
         }
+        return state.game
       })
     )
   }
 
-  checkNoMovesCondition() {
-    return this.store.pipe(
-      map(state => {
-        if (!state.game.hasWon) {
-          const hasFreeCells = state.game.board.map(row => {
-            const hasFreeCell = row.includes(0)
-            return hasFreeCell
-          })
-          return hasFreeCells.includes(true)
-        }
+  checkNoMovesCondition(board: number[][], hasWon: boolean) {
+    if (!hasWon) {
+      const hasFreeCells = board.map(row => {
+        const hasFreeCell = row.includes(0)
+        return hasFreeCell
       })
-    )
+      return hasFreeCells.includes(true)
+    }
   }
 
   checkAllRows(board: number[][], chainSize: number) {
@@ -92,8 +89,8 @@ export class WinService {
     let count = 0
     let max = 0
     row.forEach(cell => {
-      count = cell == val ? count+1 : 0;
-      if (count > max) 
+      count = cell == val ? count + 1 : 0;
+      if (count > max)
         max = count;
     })
     return max

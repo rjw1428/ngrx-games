@@ -1,24 +1,38 @@
 :host {
-    --size: 100px;
+  --size: 100px;
 }
 
 .location {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--size);
-    height: var(--size);
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size);
+  height: var(--size);
+  box-sizing: border-box;
 }
 
 .value {
-    font-family: 'Indie Flower', cursive;
-    font-size: var(--size);
-    font-weight: bold;
+  position: absolute;
+  font-family: 'Indie Flower', cursive;
+  font-size: var(--size);
+  font-weight: bold;
+//   animation: flyin 300ms ease-in 0s 1 normal forwards;
 }
 
 @media all and (max-width: 750px) {
-    .shrinkable {
-        --size: 10vw;
-    }
+  .shrinkable {
+    --size: 10vw;
+  }
+}
+
+@keyframes flyin {
+  0% {
+    opacity: 0;
+    margin-top: -50vh;
+  }
+
+  100% {
+    opacity: .5;
+    margin-top: 0px;
+  }
 }

@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AppState } from '../models/app-model';
 import { Store, select } from '@ngrx/store';
-import * as Actions from '../shared/board.actions'
-import { map, tap, filter, first, take, takeWhile } from 'rxjs/operators';
-import { Observable, of, noop } from 'rxjs';
+import { map, tap, filter, first, take, takeWhile, takeUntil, finalize, mergeMap } from 'rxjs/operators';
+import { Observable, of, noop, iif } from 'rxjs';
 import { Player } from '../models/player-model';
-import { currentTurnSelector } from '../shared/board.selectors';
+// import { currentTurnSelector } from '../shared/board.selectors';
 import { GravityService } from '../services/gravity.service';
+import { boardUpdated } from '../shared/board.actions';
+import { Statement } from '@angular/compiler';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'move-location',
@@ -17,31 +19,29 @@ import { GravityService } from '../services/gravity.service';
 export class MoveLocationComponent implements OnInit {
   @Input() column: number
   @Input() row: number
+  @Input() value: number
+  @Output() moveSelected = new EventEmitter<{ row: number, col: number }>()
   onHover: boolean = false; // Used to highlight cell on mouse over
   currentTurn$: Observable<Player> // Used to determine cell highlight color
   gameType$: Observable<string> // Used to add shrinkable class on element size if game type == c4
   player: Player // cells value
   gameOver: boolean = false
+  self$: Observable<Player>
   constructor(
     private store: Store<AppState>,
-    private gravity: GravityService
+    private gravity: GravityService,
   ) { }
 
   ngOnInit(): void {
-    // Subscribe to current turn
-    this.currentTurn$ = this.store.pipe(select(currentTurnSelector))
-    this.gameType$ = this.store.pipe(map(state=>state.game.gameType))
-    // Subscribe to which player to display
+    this.currentTurn$ = this.store.pipe(map(state => state.game.players.find(player => player.id == state.game.turnId)))
+    this.gameType$ = this.store.pipe(map(state => state.game.gameType))
+    this.self$ = this.store.pipe(map(state => state.game.players.find(player => player.id == state.game.self)))
     this.store.pipe(
-      map(state => {
-        const value = state.game.board[this.row][this.column]
-        return state.game.config.find(player => player.id == value)
-      }),
-      takeWhile(player => player != null)
+      map(state => state.game.players[this.value - 1]),
+      takeWhile(player => !!player),
     ).subscribe(playerFromStore => {
       this.player = playerFromStore
     })
-
     // Subscribe to gameOver condition
     this.store.pipe(
       map(state => !!state.game.hasWon)
@@ -49,23 +49,28 @@ export class MoveLocationComponent implements OnInit {
   }
 
   onClick() {
-    if (this.gameOver) return console.log("The game has been won, reset the board.")
-    if (this.player) return console.log("Position already taken, try again.")
     this.store.pipe(
-      map(state => {
-        if (state.game.isGravity)
-          return this.gravity.applyGravity(state.game.board, this.row, this.column)
-        else return this.row
-      }),
-      first(),
-      map(row => {
-        if (row<0) return console.log("This column is full, try another")
-        this.store.dispatch(Actions.boardUpdated({
-          row: row,
-          col: this.column
-        }))
-      })
-    ).subscribe(noop)
+      mergeMap(state =>
+        iif(() => state.game.turnId == state.game.self && state.game.players.length > 1,
+          this.store.pipe(
+            map(state => {
+              if (state.game.isGravity)
+                return this.gravity.applyGravity(state.game.board, this.row, this.column)
+              else return this.row
+            })
+          ),
+          of(null)
+        )
+      ),
+      first()
+    ).subscribe((row: number | null) => {
+      if (row!=null) {
+        if (this.gameOver) return console.log("The game has been won, reset the board.")
+        if (this.player) return console.log("Position already taken, try again.")
+        this.moveSelected.emit({ row: row, col: this.column })
+      }
+    })
+
   }
 
   changeStyle(event) {

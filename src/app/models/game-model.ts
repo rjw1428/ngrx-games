@@ -1,13 +1,14 @@
 import { Player } from './player-model';
 
 export interface GameState {
-    turnId: number,
+    turnId: string,
     hasWon: Player,
     board: number[][],
-    config: Player[],
+    players: Player[],
     gameType: null | "ttt" | "c4"
-    boardWidth: number,
-    boardHeight: number,
+    boardSize: number[],
     winChain: number,
     isGravity: boolean,
+    playMode: string,
+    self: string
 }

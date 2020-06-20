@@ -8,19 +8,34 @@
   <div class="board">
     <div class="row" *ngFor="let row of (board$ | async) as board; let j=index">
       <div class="cell" *ngFor="let cell of row; let i=index">
-        <move-location [row]="j" [column]="i"></move-location>
+        <move-location [row]="j" [column]="i" [value]="board[j][i]" (moveSelected)="onMoveSelected($event)">
+        </move-location>
       </div>
     </div>
   </div>
 
   <!-- MESSAGES -->
-  <h1 *ngIf="isTie && !(hasWon$ | async)">Tie Game</h1>
+  <h1 *ngIf="(isTie$ | async) && !(hasWon$ | async)">Tie Game</h1>
   <h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
-  <h3 *ngIf="!isTie && !(hasWon$ | async)">Turn: <span
-      [ngStyle]="{'color':(turn$ | async)?.color}">{{(turn$ | async)?.name}}</span></h3>
+  <h3 *ngIf="!(isTie$ | async) && !(hasWon$ | async)">Turn: <span
+      [ngStyle]="{'color':(turn$ | async)?.color}">{{turn$ | async | playerString}}</span>
+  </h3>
+  <h3 *ngIf="(self$ | async) as self">
+    User: <span [ngStyle]="{'color': self.color}">{{self | playerString}}</span>
+  </h3>
+  <h3 *ngIf="(opponent$ | async) as opponent; else waiting">
+    Opponent: <span [ngStyle]="{'color': opponent.color}">{{opponent | playerString}}</span>
+  </h3>
+  <ng-template #waiting>
+    <h3>Waiting on opponent
+      <span class="bounce ball1">.</span>
+      <span class="bounce ball2">.</span>
+      <span class="bounce ball3">.</span>
+    </h3>
+  </ng-template>
   <hr>
 
   <!-- RESET -->
-  <button mat-raised-button *ngIf="isTie || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
+  <button mat-raised-button *ngIf="(isTie$ | async) || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
 
 </div>

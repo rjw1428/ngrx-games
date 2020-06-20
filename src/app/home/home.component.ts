@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Store } from '@ngrx/store';
 import { AppState } from '../models/app-model';
-import * as Actions from '../shared/board.actions'
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { PlayerService } from '../services/player.service';
+import { playmodeSelected, gameSelected } from '../shared/board.actions';
+import { Player } from '../models/player-model';
 
 @Component({
   selector: 'app-home',
@@ -16,28 +18,40 @@ export class HomeComponent implements OnInit {
     { value: "ttt", label: "Tic Tac Toe" },
     { value: "c4", label: "Connect Four" },
   ]
+  modeList = [
+    // { value: "local1", label: "Vs Computer" },
+    { value: "web", label: "Two Player (Online)" },
+    // { value: "local2", label: "Two Player (Local)" },
+  ]
   selectedGameId: string
+  selectedPlayMode: string
   constructor(
     private store: Store<AppState>,
-    private router: Router
+    private router: Router,
+    private playerService: PlayerService
   ) { }
 
   ngOnInit(): void {
-    this.store.pipe(
-      map(state => state.game.gameType)
-    ).subscribe(gameType => this.selectedGameId = gameType ? gameType : this.gameList[0].value)
+    this.selectedGameId = this.gameList[0].value
+    this.selectedPlayMode = this.modeList[0].value
   }
 
   onGameSelect(event: MatSelectChange) {
     this.selectedGameId = event.value
   }
 
-  onConfigSet() {
-    this.store.dispatch(Actions.gameSelected({
-      gameTypeId: this.selectedGameId
+  onModeSelect(event: MatSelectChange) {
+    this.selectedPlayMode = event.value
+    this.store.dispatch(playmodeSelected({
+      mode: this.selectedPlayMode
     }))
-    this.router.navigate(['/game'])
-
   }
 
+  onConfigSet(player: Player) {
+    this.playerService.joinGame(player, this.selectedGameId)
+    this.store.dispatch(gameSelected({
+      gameTypeId: this.selectedGameId,
+      player
+    }))
+  }
 }

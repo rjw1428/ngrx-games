@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { GravityService } from './gravity.service';
-import * as test from '../test/boards'
+import { GravityService } from '../gravity.service';
+import * as test from '../../test/boards'
 
 describe('GravityService', () => {
   let service: GravityService;

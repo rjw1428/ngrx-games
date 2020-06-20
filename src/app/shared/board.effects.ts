@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core'
 import { ofType, createEffect, Actions } from "@ngrx/effects";
-import { ConfigService } from '../services/config.service';
 import * as GameActions from './board.actions'
-import { setPlayerConfig } from './board.actions'
 
 @Injectable()
 export class BoardEffects {
@@ -25,7 +23,6 @@ export class BoardEffects {
     // )
     constructor(
         private actions$: Actions,
-        private configService: ConfigService
     ) {
 
     }

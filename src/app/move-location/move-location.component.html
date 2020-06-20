@@ -1,6 +1,6 @@
 <div *ngIf="gameType$ | async as gameType"
   [ngClass]="{'location':true, 'shrinkable': gameType=='c4'}" 
-  [ngStyle]="{'border': onHover?'5px solid '+(currentTurn$ | async)?.color:'none'}"
+  [ngStyle]="{'border': onHover?'5px solid '+(self$ | async)?.color:'none'}"
   (mouseover)="changeStyle($event)" 
   (mouseout)="changeStyle($event)" 
   (click)="onClick()">

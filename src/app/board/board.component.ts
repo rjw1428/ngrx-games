@@ -1,14 +1,14 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ConfigService } from '../services/config.service';
 import { Observable, noop } from 'rxjs';
 import { Player } from '../models/player-model';;
 import { Store, select } from '@ngrx/store';
-import * as Actions from '../shared/board.actions'
-import { boardSelector, turnSelector, configSelector, hasWonSelector } from '../shared/board.selectors';
+import { boardSelector, hasWonSelector } from '../shared/board.selectors';
 import { AppState } from '../models/app-model';
 import { WinService } from '../services/win.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { switchMap, map, first, tap } from 'rxjs/operators';
+import { initializeBoard, boardUpdated } from '../shared/board.actions';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'board',
@@ -17,61 +17,55 @@ import { switchMap, map, first, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardComponent implements OnInit {
-  player1: Player
-  player2: Player
   board$: Observable<any>
   turn$: Observable<Player>
   config$: Observable<Player[]>
   hasWon$: Observable<Player> | null
-  isTie: boolean = false
-
+  isTie$: Observable<boolean>
+  opponent$: Observable<Player>
+  self$: Observable<Player>
   constructor(
     private store: Store<AppState>,
     private winService: WinService,
     private router: Router,
-    private configService: ConfigService
+    private playerService: PlayerService,
+    private route: ActivatedRoute
   ) {
   }
 
   ngOnInit(): void {
     // Initialize Board
     this.onReset()
+    // this.route.paramMap.subscribe(console.log)
 
     // Monitor Game conditions
-    this.store.pipe(
-      switchMap(state => {
-        return this.winService.checkWinConitions(state.game.winChain)
-      }),
-      switchMap(() => {
-        return this.winService.checkNoMovesCondition()
-      }),
-    ).subscribe(freeMoves => this.isTie = !freeMoves)
-
-    // Get Player config
-    this.configService.getConfig().subscribe(players => {
-      this.store.dispatch(Actions.setPlayerConfig({
-        config: players
-      }))
-    })
+    this.isTie$ = this.store.pipe(
+      switchMap(state => this.winService.checkWinConitions(state.game.winChain)),
+      map(state => !this.winService.checkNoMovesCondition(state.board, !!state.hasWon)),
+    )
 
     this.board$ = this.store.pipe(select(boardSelector))
-    this.turn$ = this.store.pipe(select(turnSelector))
-    this.config$ = this.store.pipe(select(configSelector))
+    this.turn$ = this.store.pipe(map(state => state.game.players.find(player => player.id == state.game.turnId)))
+    this.opponent$ = this.store.pipe(map(state => state.game.players.find(player => player.id != state.game.self)))
+    this.self$ = this.store.pipe(map(state => state.game.players.find(player => player.id == state.game.self)))
     this.hasWon$ = this.store.pipe(select(hasWonSelector))
   }
 
-  initializeBoard(width, height): number[][] {
-    return Array(height).fill(
-      Array(width).fill(0)
-    )
+  onMoveSelected(position: { row: number, col: number }) {
+    this.store.pipe(
+      map(state => state.game.players.findIndex(player => player.id == state.game.self) + 1),
+      first()
+    ).subscribe(value => {
+      this.playerService.broadcastMove({ ...position, value })
+    })
   }
 
   onReset() {
     this.store.pipe(
       map(state => {
         return {
-          width: state.game.boardWidth,
-          height: state.game.boardHeight
+          width: state.game.boardSize[0],
+          height: state.game.boardSize[1]
         }
       }),
       first()
@@ -79,13 +73,14 @@ export class BoardComponent implements OnInit {
       if (!board.height || !board.width)
         this.onHome()
       else
-        this.store.dispatch(Actions.initializeBoard({
-          board: this.initializeBoard(board.width, board.height)
+        this.store.dispatch(initializeBoard({
+          board: this.playerService.initializeBoard(board.width, board.height)
         }))
     })
   }
 
   onHome() {
     this.router.navigate(['/'])
+    this.playerService.onDisconnect()
   }
 }

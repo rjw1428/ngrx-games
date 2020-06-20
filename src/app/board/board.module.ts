@@ -9,6 +9,7 @@ import { BoardEffects } from '../shared/board.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { WinService } from '../services/win.service';
 import { SharedModule } from '../shared/shared.module';
+import { PlayerStringPipe } from '../pipes/player-string.pipe';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,7 @@ export const routes: Routes = [
   declarations: [
     BoardComponent,
     MoveLocationComponent,
+    PlayerStringPipe
   ],
   imports: [
     CommonModule,

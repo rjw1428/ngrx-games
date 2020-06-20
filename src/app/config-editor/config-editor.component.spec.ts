@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfigEditorComponent } from './config-editor.component';
 import { ConfigModule } from './config.module';
 import { SharedModule } from '../shared/shared.module';
-import { ConfigService } from '../services/config.service';
 import { AppModule } from '../app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
