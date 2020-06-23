@@ -11,7 +11,9 @@ export const initialGameState: GameState = {
     gameType: null,
     winChain: 0,
     playMode: "",
-    self: null
+    self: null,
+    room: null,
+    creator: ""
 }
 
 
@@ -39,21 +41,6 @@ export const boardReducer = createReducer(
             }
         }
     }),
-    // on(Actions.boardUpdated, (state, action) => {
-    //     const next = state.board.map((row, rowInd) => {
-    //         return rowInd === action.row
-    //             ? row.map((val, colInd) => {
-    //                 return colInd == action.col ? state.players.findIndex(player=>player.id==state.turnId)+1 : val
-    //             })
-    //             : row
-    //     })
-    //     return {
-    //         ...state,
-    //         turnId: state.players.find(player=>player.id!=state.turnId).id,
-    //         board: next,
-    //     }
-    // }),
-
     on(Actions.initializeBoard, (state, action) => {
         return {
             ...state,
@@ -72,7 +59,8 @@ export const boardReducer = createReducer(
     on(Actions.setPlayers, (state, action) => {
         return {
             ...state,
-            players: action.players
+            players: action.players,
+            room: action.room
         }
     }),
     on(Actions.playmodeSelected, (state, action) => {
@@ -104,6 +92,20 @@ export const boardReducer = createReducer(
         return {
             ...state,
             board: next,
+        }
+    }),
+    on(Actions.setRoomInfo, (state, action) => {
+        return {
+            ...state,
+            room: action.roomData.name,
+            gameType: action.roomData.type,
+            creator: action.roomData.creator
+        }
+    }),
+    on(Actions.gameTypeSelected, (state, action) => {
+        return {
+            ...state,
+            gameType: action.gameType
         }
     })
 )

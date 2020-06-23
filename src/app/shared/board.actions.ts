@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Player } from '../models/player-model';
+import { Room } from '../models/room';
 
 export const gameSelected = createAction(
     "[Home Component] Game Type Selected",
@@ -27,12 +28,17 @@ export const getPlayerConfig = createAction(
 
 export const setPlayers = createAction(
     "[Player Service] Set Player Configs",
-    props<{ players: Player[] }>()
+    props<{ players: Player[], room: string }>()
 )
 
 export const playmodeSelected = createAction(
     "[Home Component] Set Game Mode",
     props<{ mode: string }>()
+)
+
+export const gameTypeSelected = createAction(
+    "[Home Component] Set Game Type",
+    props<{ gameType: string }>()
 )
 
 export const turnChanged = createAction(
@@ -50,3 +56,7 @@ export const updateBoard = createAction(
     props<{ row: number, col: number, value: number }>()
 )
 
+export const setRoomInfo = createAction(
+    "[Player Service (On Room Info Request)] Receive Room Data",
+    props<{ roomData: Room }>()
+)

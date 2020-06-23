@@ -1,5 +1,8 @@
 <div class="wrapper">
-  <mat-card class="select-game-card mat-elevation-z1">
+  <mat-card class="select-game-card mat-elevation-z1" *ngIf="!(inviteGame$ | async); else gameStats">
+    <mat-card-header>
+      <mat-card-title>Start A Game</mat-card-title>
+    </mat-card-header>
     <mat-form-field>
       <mat-label>Select a game:</mat-label>
       <mat-select [value]="selectedGameId" (selectionChange)="onGameSelect($event)">
@@ -10,14 +13,27 @@
     </mat-form-field>
 
     <mat-form-field>
-        <mat-label>Play Mode:</mat-label>
-        <mat-select [value]="selectedPlayMode" (selectionChange)="onModeSelect($event)">
-          <mat-option [value]="mode.value" *ngFor="let mode of modeList">
-            {{mode.label}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-label>Play Mode:</mat-label>
+      <mat-select [value]="selectedPlayMode" (selectionChange)="onModeSelect($event)">
+        <mat-option [value]="mode.value" *ngFor="let mode of modeList">
+          {{mode.label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </mat-card>
+
+  <ng-template #gameStats>
+    <mat-card class="select-game-card mat-elevation-z1">
+      <mat-card-header>
+        <mat-card-title>Join A Game</mat-card-title>
+      </mat-card-header>
+      <mat-card-content *ngIf="(roomData$ | async) as roomData">
+        <h3>Game Mode: {{ roomData.type}}</h3>
+        <p>Invited By: {{roomData.creator}}</p>
+        <p>Room ID: {{roomData.name}}</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
 
   <config-editor (start)="onConfigSet($event)"></config-editor>
 

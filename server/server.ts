@@ -20,10 +20,11 @@ io.on('connection', (socket) => {
     socket.on('join', (options, callback) => {
         const { error, user } = addUser({ id: socket.id, ...options })
         if (error) return callback(error)
-        console.log(users)
         //Set the room
-        socket.join(options.room.trim())
+        socket.join(user.room.trim())
         const count = getUsersInRoom(user.room).length - 1
+        console.log(`[Join Game] ${user.name} has joined ${user.room}  (${count + 1}/2)`)
+
         //Notify user that they've joined
         socket.emit('onConnect', { action: null, message: `Welcome to the game, ${count == 0 ? "waiting on opponent" : "your opponent is waiting for you"}...` })
 
@@ -31,9 +32,8 @@ io.on('connection', (socket) => {
         socket.to(user.room).emit("onConnect", { action: "reset", message: `${user.name} has joined...` })
 
         //Emit number of users in the room
-        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-        console.log(users)
-        io.to(user.room).emit("setTurn", ({ turn: users[0] }))
+        io.in(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
+        io.in(user.room).emit("setTurn", ({ turn: users.filter(userRef => userRef.room == user.room)[0] }))
         callback()
     })
 
@@ -44,27 +44,39 @@ io.on('connection', (socket) => {
     socket.on('moveMade', (options, callback) => {
         //Set user turn
         const user = users.find(user => user.id == socket.id)
-        io.to(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
-        io.to(user.room).emit("recieveMove", (options))
+        io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
+        io.in(user.room).emit("recieveMove", (options))
         callback()
     })
 
+    socket.on('whatRoom', (options, callback) => {
+        const creator = users.find(user => user.room == options.room)
+        if (!creator) return callback({ error: "Room has been closed"})
+        socket.emit('recieveRoomInfo', { name: creator.room, type: creator.type, creator: creator.name })
+    })
+
     socket.on('leaveGame', () => {
-        let user = removeUser(socket.id)
-        if (user) {
-            socket.to(user.room).emit('onConnect', { action: null, message: `${user.name} has left the game...` })
-            io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-        }
+        leaveGame(socket)
     })
 
     socket.on('disconnect', () => {
-        let user = removeUser(socket.id)
-        if (user) {
-            socket.to(user.room).emit('onConnect', { action: null, message: `${user.name} has left the game...` })
-            io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-        }
+        leaveGame(socket)
     })
 })
+
+const leaveGame = (socket: SocketIO.Socket) => {
+    const { error, user } = removeUser(socket.id)
+    if (user) {
+        socket.leave(user.room)
+        const users = getUsersInRoom(user.room)
+        console.log(users)
+        const count = users.length - 1
+        console.log(`[Leave Game] ${user.name} has left ${user.room}  (${count + 1}/2)`)
+
+        socket.to(user.room).emit('onConnect', { action: null, message: `${user.name} has left the game...` })
+        socket.to(user.room).emit('roomData', { room: user.room, users: users })
+    }
+}
 
 server.listen(port, () => {
     console.log(`Server has started on port ${port}`)

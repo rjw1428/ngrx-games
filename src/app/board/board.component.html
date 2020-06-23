@@ -3,6 +3,13 @@
   <button mat-raised-button color="primary" style="float:right;margin-right:10px" (click)="onHome()">Home</button>
 </span>
 
+<!-- ROOM NAME -->
+<div *ngIf="!(opponent$ | async)" style="display: flex; flex-direction: column; align-items: center;">
+  <h3>Invite Opponent:</h3>
+  <p> {{host}}/{{roomName$ | async}}</p>
+</div>
+
+
 <!-- BOARD -->
 <div class="board-wrapper">
   <div class="board">
@@ -37,5 +44,4 @@
 
   <!-- RESET -->
   <button mat-raised-button *ngIf="(isTie$ | async) || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
-
 </div>

@@ -4,7 +4,8 @@ export class Player {
         public value: number,
         public name: string,
         public symbol: string,
-        public color: string
+        public color: string,
+        public room?: string
     ) { }
 
 }

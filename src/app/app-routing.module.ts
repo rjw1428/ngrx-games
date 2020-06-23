@@ -8,6 +8,10 @@ const routes: Routes = [
     loadChildren: () => import('./board/board.module').then(m => m.BoardModule),
   },
   {
+    path: ":id",
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+  },
+  {
     path: "**",
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
   }];

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { Observable, noop } from 'rxjs';
 import { Player } from '../models/player-model';;
 import { Store, select } from '@ngrx/store';
@@ -6,7 +6,7 @@ import { boardSelector, hasWonSelector } from '../shared/board.selectors';
 import { AppState } from '../models/app-model';
 import { WinService } from '../services/win.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, map, first, tap } from 'rxjs/operators';
+import { switchMap, map, first, tap, filter } from 'rxjs/operators';
 import { initializeBoard, boardUpdated } from '../shared/board.actions';
 import { PlayerService } from '../services/player.service';
 
@@ -17,6 +17,7 @@ import { PlayerService } from '../services/player.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardComponent implements OnInit {
+  roomName$: Observable<string>
   board$: Observable<any>
   turn$: Observable<Player>
   config$: Observable<Player[]>
@@ -24,6 +25,7 @@ export class BoardComponent implements OnInit {
   isTie$: Observable<boolean>
   opponent$: Observable<Player>
   self$: Observable<Player>
+  host: string
   constructor(
     private store: Store<AppState>,
     private winService: WinService,
@@ -33,7 +35,14 @@ export class BoardComponent implements OnInit {
   ) {
   }
 
+  //Disconnect player on 'Back' navigation
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    this.playerService.onDisconnect()
+  }
+
   ngOnInit(): void {
+    this.host = window.location.origin
     // Initialize Board
     this.onReset()
     // this.route.paramMap.subscribe(console.log)
@@ -44,6 +53,7 @@ export class BoardComponent implements OnInit {
       map(state => !this.winService.checkNoMovesCondition(state.board, !!state.hasWon)),
     )
 
+    this.roomName$ = this.store.pipe(map(state => state.game.room))
     this.board$ = this.store.pipe(select(boardSelector))
     this.turn$ = this.store.pipe(map(state => state.game.players.find(player => player.id == state.game.turnId)))
     this.opponent$ = this.store.pipe(map(state => state.game.players.find(player => player.id != state.game.self)))
@@ -83,4 +93,6 @@ export class BoardComponent implements OnInit {
     this.router.navigate(['/'])
     this.playerService.onDisconnect()
   }
+
+
 }

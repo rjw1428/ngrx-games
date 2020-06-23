@@ -40,8 +40,10 @@ export class MoveLocationComponent implements OnInit {
       map(state => state.game.players[this.value - 1]),
       takeWhile(player => !!player),
     ).subscribe(playerFromStore => {
+      console.log(this.row,this.column,this.value)
       this.player = playerFromStore
     })
+
     // Subscribe to gameOver condition
     this.store.pipe(
       map(state => !!state.game.hasWon)
@@ -49,9 +51,10 @@ export class MoveLocationComponent implements OnInit {
   }
 
   onClick() {
+    // console.log(this.value)
     this.store.pipe(
       mergeMap(state =>
-        iif(() => state.game.turnId == state.game.self && state.game.players.length > 1,
+        iif(() => state.game.turnId == state.game.self && state.game.players.length > 1 && !this.value,
           this.store.pipe(
             map(state => {
               if (state.game.isGravity)
