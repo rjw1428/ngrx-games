@@ -16,6 +16,10 @@ const distDir = path.join(__dirname, "../dist/ngrx-tic-tac-toe");
 app.use(cors())
 app.use(express.static(distDir));
 
+app.get('*',(req, res) => {
+    res.sendFile(path.resolve(distDir, 'index.html'));
+});
+
 io.on('connection', (socket) => {
     socket.on('join', (options, callback) => {
         const { error, user } = addUser({ id: socket.id, ...options })
@@ -78,7 +82,6 @@ const leaveGame = (socket: SocketIO.Socket) => {
     if (user) {
         socket.leave(user.room)
         const users = getUsersInRoom(user.room)
-        console.log(users)
         const count = users.length - 1
         console.log(`[Leave Game] ${user.name} has left ${user.room}  (${count + 1}/2)`)
 
