@@ -33,8 +33,7 @@ export class PlayerService {
     })
 
     this.socket.on('onConnect', (resp) => {
-      console.log(resp.message)
-      alert(resp.message)
+      if (resp.message) alert(resp.message)
       if (resp.action == 'reset') {
         this.store.pipe(
           first(),
@@ -57,7 +56,7 @@ export class PlayerService {
 
     this.socket.on('recieveRoomInfo', (roomData: Room) => {
       this.store.dispatch(setRoomInfo({ roomData }))
-      this.store.dispatch(gameTypeSelected({gameType: roomData.type}))
+      this.store.dispatch(gameTypeSelected({ gameType: roomData.type }))
     })
   }
 
@@ -96,6 +95,12 @@ export class PlayerService {
     this.socket.emit("whatRoom", { room }, ({ error }) => {
       if (error) alert(error)
       this.router.navigate(['/'])
+    })
+  }
+
+  setResetState() {
+    this.socket.emit('reset', (error) => {
+      if (error) return alert(error)
     })
   }
 }

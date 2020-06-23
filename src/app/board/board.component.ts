@@ -82,10 +82,12 @@ export class BoardComponent implements OnInit {
     ).subscribe(board => {
       if (!board.height || !board.width)
         this.onHome()
-      else
+      else {
+        this.playerService.setResetState()
         this.store.dispatch(initializeBoard({
           board: this.playerService.initializeBoard(board.width, board.height)
         }))
+      }
     })
   }
 

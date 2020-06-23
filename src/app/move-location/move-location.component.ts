@@ -40,7 +40,7 @@ export class MoveLocationComponent implements OnInit {
       map(state => state.game.players[this.value - 1]),
       takeWhile(player => !!player),
     ).subscribe(playerFromStore => {
-      console.log(this.row,this.column,this.value)
+      // console.log(this.row,this.column,this.value)
       this.player = playerFromStore
     })
 

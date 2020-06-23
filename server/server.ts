@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
         console.log(`[Join Game] ${user.name} has joined ${user.room}  (${count + 1}/2)`)
 
         //Notify user that they've joined
-        socket.emit('onConnect', { action: null, message: `Welcome to the game, ${count == 0 ? "waiting on opponent" : "your opponent is waiting for you"}...` })
+        socket.emit('onConnect', { action: null, message: count == 0 ? null : "Your opponent is waiting for you..." })
 
         //Notify other users of the player
         socket.to(user.room).emit("onConnect", { action: "reset", message: `${user.name} has joined...` })
@@ -44,6 +44,10 @@ io.on('connection', (socket) => {
     socket.on('moveMade', (options, callback) => {
         //Set user turn
         const user = users.find(user => user.id == socket.id)
+        const opponent = users.find(u => u.room == user.room && u.id != user.id)
+        if (user.hasReset ^ opponent.hasReset) return callback('Opponent has not reset yet...')
+        user.hasReset = false
+        opponent.hasReset = false
         io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
         io.in(user.room).emit("recieveMove", (options))
         callback()
@@ -51,8 +55,13 @@ io.on('connection', (socket) => {
 
     socket.on('whatRoom', (options, callback) => {
         const creator = users.find(user => user.room == options.room)
-        if (!creator) return callback({ error: "Room has been closed"})
+        if (!creator) return callback({ error: "Room has been closed" })
         socket.emit('recieveRoomInfo', { name: creator.room, type: creator.type, creator: creator.name })
+    })
+
+    socket.on('reset', (callback) => {
+        const user = users.find(u => u.id == socket.id)
+        user.hasReset = true
     })
 
     socket.on('leaveGame', () => {
