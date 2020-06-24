@@ -17,7 +17,7 @@ app.use(cors())
 app.use(express.static(distDir));
 
 // Heroku will server all routes through what Angular configures
-app.get('*',(req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.resolve(distDir, 'index.html'));
 });
 
@@ -50,12 +50,15 @@ io.on('connection', (socket) => {
         //Set user turn
         const user = users.find(user => user.id == socket.id)
         const opponent = users.find(u => u.room == user.room && u.id != user.id)
-        if (user.hasReset ^ opponent.hasReset) return callback('Opponent has not reset yet...')
-        user.hasReset = false
-        opponent.hasReset = false
-        io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
-        io.in(user.room).emit("recieveMove", (options))
-        callback()
+        if (user && opponent) {
+            if (user.hasReset ^ opponent.hasReset) return callback('Opponent has not reset yet...')
+            user.hasReset = false
+            opponent.hasReset = false
+            io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
+            io.in(user.room).emit("recieveMove", (options))
+            callback()
+        }
+        callback("Move cannot be made, of the players is missing from the game...")
     })
 
     socket.on('whatRoom', (options, callback) => {
