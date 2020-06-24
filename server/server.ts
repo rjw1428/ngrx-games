@@ -56,9 +56,9 @@ io.on('connection', (socket) => {
             opponent.hasReset = false
             io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
             io.in(user.room).emit("recieveMove", (options))
-            callback()
+            return callback()
         }
-        callback("Move cannot be made, of the players is missing from the game...")
+        return callback("Move cannot be made, of the players is missing from the game...")
     })
 
     socket.on('whatRoom', (options, callback) => {
