@@ -94,6 +94,4 @@ export class BoardComponent implements OnInit {
     this.router.navigate(['/'])
     this.playerService.onDisconnect()
   }
-
-
 }

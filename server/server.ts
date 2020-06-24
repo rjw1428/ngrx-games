@@ -41,11 +41,7 @@ io.on('connection', (socket) => {
         io.in(user.room).emit("setTurn", ({ turn: users.filter(userRef => userRef.room == user.room)[0] }))
         callback()
     })
-
-    socket.on('getDefaultPlayers', (callback) => {
-        callback(getConfig())
-    })
-
+    
     socket.on('moveMade', (options, callback) => {
         //Set user turn
         const user = users.find(user => user.id == socket.id)
@@ -91,7 +87,11 @@ const leaveGame = (socket: SocketIO.Socket) => {
 
         socket.to(user.room).emit('onConnect', { action: null, message: `${user.name} has left the game...` })
         socket.to(user.room).emit('roomData', { room: user.room, users: users })
+        const other = users.find(u => u.id != socket.id && u.room == user.room)
+        if (other)
+            other.hasReset = true
     }
+
 }
 
 server.listen(port, () => {
