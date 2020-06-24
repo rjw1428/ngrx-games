@@ -7,7 +7,7 @@ export const addUser = ({ id, name, type, symbol, color, room }) => {
     const exitingUser = users.find(user => user.room === room && user.type == type && user.id === id)
     if (exitingUser) return { error: "Name is already in use, please try again" }
 
-    const user = { id, name, room, symbol, color, type }
+    const user = { id, name, room, symbol, color, type, hasReset: true }
     if (users.filter(user => user.room == room && user.type == user.t).length >= 2) return { error: "Room is full" }
     users.push(user)
     return { error: undefined, user }
@@ -29,9 +29,8 @@ export const getUsersInRoom = (room) => {
 function makeRoomId(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return result;
 }

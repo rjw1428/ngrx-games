@@ -16,6 +16,7 @@ const distDir = path.join(__dirname, "../dist/ngrx-tic-tac-toe");
 app.use(cors())
 app.use(express.static(distDir));
 
+// Heroku will server all routes through what Angular configures
 app.get('*',(req, res) => {
     res.sendFile(path.resolve(distDir, 'index.html'));
 });

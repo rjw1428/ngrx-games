@@ -30,8 +30,7 @@ export class BoardComponent implements OnInit {
     private store: Store<AppState>,
     private winService: WinService,
     private router: Router,
-    private playerService: PlayerService,
-    private route: ActivatedRoute
+    private playerService: PlayerService
   ) {
   }
 
