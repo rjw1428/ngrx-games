@@ -38,7 +38,8 @@ io.on('connection', (socket) => {
 
         //Emit number of users in the room
         io.in(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-        io.in(user.room).emit("setTurn", ({ turn: users.filter(userRef => userRef.room == user.room)[0] }))
+        io.in(user.room).emit("setTurn", { turn: users.filter(userRef => userRef.room == user.room)[0] })
+        socket.broadcast.emit('apiData', {users: users})
         callback()
     })
 
@@ -68,12 +69,6 @@ io.on('connection', (socket) => {
         user.hasReset = true
     })
 
-    socket.on('requestData', (options, callback) => {
-        if (options.property == 'users')
-            callback(users)
-        else callback({error: "Paramerter not defined in backend"})
-    })
-
     socket.on('leaveGame', () => {
         leaveGame(socket)
     })
@@ -97,7 +92,7 @@ const leaveGame = (socket: SocketIO.Socket) => {
         if (other)
             other.hasReset = true
     }
-
+    socket.broadcast.emit('apiData', {users: users})
 }
 
 server.listen(port, () => {
