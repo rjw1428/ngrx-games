@@ -15,7 +15,11 @@
   <div class="board">
     <div class="row" *ngFor="let row of (board$ | async) as board; let j=index">
       <div class="cell" *ngFor="let cell of row; let i=index">
-        <move-location [row]="j" [column]="i" [value]="board[j][i]" (moveSelected)="onMoveSelected($event)">
+        <move-location 
+          [row]="j"   
+          [column]="i"
+          [value]="board[j][i]" 
+          (moveSelected)="onMoveSelected($event)">
         </move-location>
       </div>
     </div>

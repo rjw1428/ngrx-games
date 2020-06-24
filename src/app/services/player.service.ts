@@ -24,6 +24,7 @@ export class PlayerService {
     private store: Store<AppState>,
     private router: Router) {
     this.socket = io(environment.apiUrl)
+    
     this.socket.on('roomData', ({ room, users }) => {
       this.store.dispatch(setPlayers({ players: users, room }))
       if (room != this.roomData.name) {

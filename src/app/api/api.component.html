@@ -1,0 +1,6 @@
+<div style="margin-left: 10px;">
+  <h3>{{title$ | async | uppercase}}</h3>
+  <ol>
+    <li *ngFor="let value of valueList$ | async"><pre>{{value | json}}</pre></li>
+  </ol>
+</div>

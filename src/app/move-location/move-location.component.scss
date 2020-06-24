@@ -16,7 +16,10 @@
   font-family: 'Indie Flower', cursive;
   font-size: var(--size);
   font-weight: bold;
-//   animation: flyin 300ms ease-in 0s 1 normal forwards;
+}
+
+.fall {
+  animation: flyin 300ms ease-in 0s 1 normal forwards;
 }
 
 @media all and (max-width: 750px) {

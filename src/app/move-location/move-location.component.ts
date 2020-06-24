@@ -24,7 +24,7 @@ export class MoveLocationComponent implements OnInit {
   onHover: boolean = false; // Used to highlight cell on mouse over
   currentTurn$: Observable<Player> // Used to determine cell highlight color
   gameType$: Observable<string> // Used to add shrinkable class on element size if game type == c4
-  player: Player // cells value
+  player: Player
   gameOver: boolean = false
   self$: Observable<Player>
   constructor(
@@ -40,7 +40,6 @@ export class MoveLocationComponent implements OnInit {
       map(state => state.game.players[this.value - 1]),
       takeWhile(player => !!player),
     ).subscribe(playerFromStore => {
-      // console.log(this.row,this.column,this.value)
       this.player = playerFromStore
     })
 
@@ -67,7 +66,7 @@ export class MoveLocationComponent implements OnInit {
       ),
       first()
     ).subscribe((row: number | null) => {
-      if (row!=null) {
+      if (row != null) {
         if (this.gameOver) return console.log("The game has been won, reset the board.")
         if (this.player) return console.log("Position already taken, try again.")
         this.moveSelected.emit({ row: row, col: this.column })

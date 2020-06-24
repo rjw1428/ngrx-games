@@ -4,7 +4,7 @@
   (mouseover)="changeStyle($event)" 
   (mouseout)="changeStyle($event)" 
   (click)="onClick()">
-  <div class="value" 
+  <div [ngClass]="{'value':true, 'fall': false}" 
     *ngIf="player" 
     [ngStyle]="{'color': player.color}">
     {{ player.symbol }}
