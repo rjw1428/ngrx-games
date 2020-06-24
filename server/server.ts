@@ -16,6 +16,15 @@ const distDir = path.join(__dirname, "../dist/ngrx-tic-tac-toe");
 app.use(cors())
 app.use(express.static(distDir));
 
+
+app.route('/api/users').get((req, res) => {
+    const usersHTML = users.map(user => {
+        const u = JSON.stringify(user, null, 4)
+        return '<li><pre>' + u + '</pre></li>'
+    }).reduce((acc, curr) => acc += curr, "")
+    res.send(`<h3>USERS:</h3><ol>${usersHTML}</ol>`)
+});
+
 // Heroku will server all routes through what Angular configures
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(distDir, 'index.html'));
@@ -41,7 +50,7 @@ io.on('connection', (socket) => {
         io.in(user.room).emit("setTurn", ({ turn: users.filter(userRef => userRef.room == user.room)[0] }))
         callback()
     })
-    
+
     socket.on('moveMade', (options, callback) => {
         //Set user turn
         const user = users.find(user => user.id == socket.id)
