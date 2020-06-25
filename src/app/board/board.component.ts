@@ -10,6 +10,7 @@ import { switchMap, map, first, tap, filter, withLatestFrom } from 'rxjs/operato
 import { initializeBoard, boardUpdated } from '../shared/board.actions';
 import { PlayerService } from '../services/player.service';
 import { Clipboard } from '@angular/cdk/clipboard'
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
@@ -101,7 +102,7 @@ export class BoardComponent implements OnInit {
       map(state => ({ mode: state.game.gameType, room: state.game.room })),
       first()
     ).subscribe(({ mode, room }) => {
-      if (this.host.includes("localhost")) {
+      if (!environment.production) {
         this.clipboard.copy(`${this.host}/${room}`)
       } else {
         let game = ""
