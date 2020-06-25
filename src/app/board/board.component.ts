@@ -6,10 +6,10 @@ import { boardSelector, hasWonSelector } from '../shared/board.selectors';
 import { AppState } from '../models/app-model';
 import { WinService } from '../services/win.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, map, first, tap, filter } from 'rxjs/operators';
+import { switchMap, map, first, tap, filter, withLatestFrom } from 'rxjs/operators';
 import { initializeBoard, boardUpdated } from '../shared/board.actions';
 import { PlayerService } from '../services/player.service';
-
+import { Clipboard } from '@angular/cdk/clipboard'
 @Component({
   selector: 'board',
   templateUrl: './board.component.html',
@@ -30,7 +30,8 @@ export class BoardComponent implements OnInit {
     private store: Store<AppState>,
     private winService: WinService,
     private router: Router,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private clipboard: Clipboard
   ) {
   }
 
@@ -93,5 +94,24 @@ export class BoardComponent implements OnInit {
   onHome() {
     this.router.navigate(['/'])
     this.playerService.onDisconnect()
+  }
+
+  onCopyInvite() {
+    this.store.pipe(
+      map(state => ({mode: state.game.gameType, room: state.game.room})),
+      first()
+    ).subscribe(({mode, room}) => {
+      let game = ""
+      if (mode == 'ttt')
+        game = "of Tic Tac Toe"
+      else if (mode == 'c4')
+        game = "of Connect Four"
+
+      this.clipboard.copy(`I'm challenging you to a game ${game}\n${this.host}/${room}`)
+
+      /* Alert the copied text */
+      alert("Link copied");
+    })
+
   }
 }

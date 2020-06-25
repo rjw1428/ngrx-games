@@ -22,7 +22,7 @@ export const routes: Routes = [
   declarations: [
     BoardComponent,
     MoveLocationComponent,
-    PlayerStringPipe
+    PlayerStringPipe,
   ],
   imports: [
     CommonModule,

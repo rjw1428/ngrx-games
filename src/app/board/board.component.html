@@ -5,9 +5,9 @@
 
 <!-- ROOM NAME -->
 <div  *ngIf="!(opponent$ | async)" style="display: flex; flex-direction: column; align-items: center; padding-bottom: 10px;">
-  <mat-card style="width: 200px;" class="mat-elevation-z1">
+  <mat-card style="width: 200px;" class="mat-elevation-z1" (click)="onCopyInvite($event)">
     <h3 style="text-align: center;">Invite Opponent:</h3>
-    <p style="text-align: center;"> {{host}}/{{roomName$ | async}}</p>
+    <p style="text-align: center;">{{host}}/{{roomName$ | async}}</p>
   </mat-card>
 </div>
 
