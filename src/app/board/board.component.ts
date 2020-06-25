@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, Input } from '@angular/core';
 import { Observable, noop } from 'rxjs';
 import { Player } from '../models/player-model';;
 import { Store, select } from '@ngrx/store';

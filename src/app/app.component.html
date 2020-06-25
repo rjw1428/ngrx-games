@@ -1,2 +1,11 @@
-<h1 class="title">{{ title }}</h1>
-<router-outlet></router-outlet>
+<div class="container" [ngClass]="{'dark': mode =='dark'}">
+  <div>
+    <div class="title-bar">
+      <h1 class="title">{{ title }}</h1>
+      <mat-icon *ngIf="mode=='dark'" class="icon"  (click)="toggleDarkMode()">wb_sunny</mat-icon>
+      <mat-icon *ngIf="mode=='light'" class="icon" (click)="toggleDarkMode()">nights_stay</mat-icon>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+  <p style="text-align: center; font-style: italic; color: gray">Made by Ryan Wilk</p>
+</div>

@@ -8,8 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'NGRX Games';
-  constructor(
-
-  ) {
+  mode: string
+  constructor() {
+    const localBackground = localStorage.getItem('background')
+    this.mode = localBackground?localBackground:'dark'
+  }
+  toggleDarkMode() {
+    this.mode = (this.mode == 'dark') ? 'light' : "dark"
+    localStorage.setItem("background", this.mode)
   }
 }

@@ -1,13 +1,16 @@
 <!-- SETTINGS -->
-<span>
-  <button mat-raised-button color="primary" style="float:right;margin-right:10px" (click)="onHome()">Home</button>
-</span>
+<div style="position: absolute; right: 20px; top: 50px">
+  <button mat-raised-button color="primary" (click)="onHome()">Home</button>
+</div>
 
 <!-- ROOM NAME -->
-<div *ngIf="!(opponent$ | async)" style="display: flex; flex-direction: column; align-items: center;">
-  <h3>Invite Opponent:</h3>
-  <p> {{host}}/{{roomName$ | async}}</p>
+<div  *ngIf="!(opponent$ | async)" style="display: flex; flex-direction: column; align-items: center; padding-bottom: 10px;">
+  <mat-card style="width: 200px;" class="mat-elevation-z1">
+    <h3 style="text-align: center;">Invite Opponent:</h3>
+    <p style="text-align: center;"> {{host}}/{{roomName$ | async}}</p>
+  </mat-card>
 </div>
+
 
 
 <!-- BOARD -->
@@ -26,26 +29,27 @@
   </div>
 
   <!-- MESSAGES -->
-  <h1 *ngIf="(isTie$ | async) && !(hasWon$ | async)">Tie Game</h1>
-  <h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
-  <h3 *ngIf="!(isTie$ | async) && !(hasWon$ | async)">Turn: <span
-      [ngStyle]="{'color':(turn$ | async)?.color}">{{turn$ | async | playerString}}</span>
-  </h3>
-  <h3 *ngIf="(self$ | async) as self">
-    User: <span [ngStyle]="{'color': self.color}">{{self | playerString}}</span>
-  </h3>
-  <h3 *ngIf="(opponent$ | async) as opponent; else waiting">
-    Opponent: <span [ngStyle]="{'color': opponent.color}">{{opponent | playerString}}</span>
-  </h3>
-  <ng-template #waiting>
-    <h3>Waiting on opponent
-      <span class="bounce ball1">.</span>
-      <span class="bounce ball2">.</span>
-      <span class="bounce ball3">.</span>
+  <mat-card style="min-width: 200px; display: flex; flex-direction: column; align-items: center;" class="mat-elevation-z1">
+    <h1 *ngIf="(isTie$ | async) && !(hasWon$ | async)">Tie Game</h1>
+    <h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
+    <h3 *ngIf="!(isTie$ | async) && !(hasWon$ | async)">Turn: <span
+        [ngStyle]="{'color':(turn$ | async)?.color}">{{turn$ | async | playerString}}</span>
     </h3>
-  </ng-template>
-  <hr>
+    <h3 *ngIf="(self$ | async) as self">
+      User: <span [ngStyle]="{'color': self.color}">{{self | playerString}}</span>
+    </h3>
+    <h3 *ngIf="(opponent$ | async) as opponent; else waiting">
+      Opponent: <span [ngStyle]="{'color': opponent.color}">{{opponent | playerString}}</span>
+    </h3>
+    <ng-template #waiting>
+      <h3>Waiting on opponent
+        <span class="bounce ball1">.</span>
+        <span class="bounce ball2">.</span>
+        <span class="bounce ball3">.</span>
+      </h3>
+    </ng-template>
 
-  <!-- RESET -->
-  <button mat-raised-button *ngIf="(isTie$ | async) || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
+    <!-- RESET -->
+    <button mat-raised-button *ngIf="(isTie$ | async) || (hasWon$ | async) as winner" (click)="onReset()">Reset</button>
+</mat-card>
 </div>

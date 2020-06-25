@@ -1,6 +1,37 @@
-.title {
+.title-bar {
+    background: black;
     padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
     font-weight: 500;
     color: white;
-    background: black;
+    margin: 0;
 }
+
+.container {
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+    transition: all 500ms;
+}
+
+.icon {
+    color: rgb(75,75,75);
+    cursor: pointer;
+    animation: fade 300ms ease-in 0s 1 normal forwards;
+}
+
+.dark {
+    background: rgb(20,20,20);
+}
+
+
+@keyframes fade {
+    0% {opacity: 0;}
+    100% { opacity: 100%;}
+  }
