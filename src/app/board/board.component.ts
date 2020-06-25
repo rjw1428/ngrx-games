@@ -98,16 +98,20 @@ export class BoardComponent implements OnInit {
 
   onCopyInvite() {
     this.store.pipe(
-      map(state => ({mode: state.game.gameType, room: state.game.room})),
+      map(state => ({ mode: state.game.gameType, room: state.game.room })),
       first()
-    ).subscribe(({mode, room}) => {
-      let game = ""
-      if (mode == 'ttt')
-        game = "of Tic Tac Toe"
-      else if (mode == 'c4')
-        game = "of Connect Four"
+    ).subscribe(({ mode, room }) => {
+      if (this.host.includes("localhost")) {
+        this.clipboard.copy(`${this.host}/${room}`)
+      } else {
+        let game = ""
+        if (mode == 'ttt')
+          game = "of Tic Tac Toe"
+        else if (mode == 'c4')
+          game = "of Connect Four"
 
-      this.clipboard.copy(`I'm challenging you to a game ${game}\n${this.host}/${room}`)
+        this.clipboard.copy(`I'm challenging you to a game ${game}\n${this.host}/${room}`)
+      }
 
       /* Alert the copied text */
       alert("Link copied");

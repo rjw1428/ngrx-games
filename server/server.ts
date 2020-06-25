@@ -39,9 +39,9 @@ io.on('connection', (socket) => {
         //Emit number of users in the room
         io.in(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
         io.in(user.room).emit("setTurn", { turn: users.filter(userRef => userRef.room == user.room)[0] })
-        socket.broadcast.emit('apiData', {users: users})
         callback()
     })
+    io.sockets.emit('apiData', {users: users})
 
     socket.on('moveMade', (options, callback) => {
         //Set user turn

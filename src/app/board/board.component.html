@@ -32,9 +32,9 @@
   <mat-card style="min-width: 200px; display: flex; flex-direction: column; align-items: center;" class="mat-elevation-z1">
     <h1 *ngIf="(isTie$ | async) && !(hasWon$ | async)">Tie Game</h1>
     <h1 *ngIf="(hasWon$ | async) as winner">{{winner.name}} has won!!!</h1>
-    <h3 *ngIf="!(isTie$ | async) && !(hasWon$ | async)">Turn: <span
+    <h1 *ngIf="!(isTie$ | async) && !(hasWon$ | async)">Turn: <span
         [ngStyle]="{'color':(turn$ | async)?.color}">{{turn$ | async | playerString}}</span>
-    </h3>
+    </h1>
     <h3 *ngIf="(self$ | async) as self">
       User: <span [ngStyle]="{'color': self.color}">{{self | playerString}}</span>
     </h3>
