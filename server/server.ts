@@ -48,12 +48,12 @@ io.on('connection', (socket) => {
         const user = users.find(user => user.id == socket.id)
         const opponent = users.find(u => u.room == user.room && u.id != user.id)
         if (user && opponent) {
-            if (user.hasReset ^ opponent.hasReset) return callback('Opponent has not reset yet...')
+            if (user.hasReset !== opponent.hasReset) return callback('Opponent has not reset yet...')
             user.hasReset = false
             opponent.hasReset = false
             io.in(user.room).emit("setTurn", ({ turn: users.filter(u => u.room == user.room).find(u => user.id != u.id) }))
             io.in(user.room).emit("recieveMove", (options))
-            return callback()
+            return callback() 
         }
         return callback("Move cannot be made, of the players is missing from the game...")
     })
